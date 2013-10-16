@@ -1,0 +1,35 @@
+{
+    "name": "bushbaby/bsb-doctrine-translation-loader",
+    "description": "BsbDoctrineTranslationLoader is a ZF2 module that provides a doctrine powered translation loader.",
+    "type": "library",
+    "keywords": ["zf2", "translation", "i18n", "module", "doctrine"],
+    "homepage": "https://github.com/bushbaby/BsbDoctrineTranslationLoader",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bas Kamer",
+            "homepage": "http://bushbaby.nl"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+
+        "zendframework/zend-modulemanager" : ">=2.2.2",
+        "zendframework/zend-i18n": ">=2.2.2",
+        "zendframework/zend-mvc": ">=2.2.2",
+        "zendframework/zend-servicemanager": ">=2.2.2",
+        "zendframework/zend-stdlib": ">=2.2.2",
+        "doctrine/doctrine-orm-module":  ">=0.7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "BsbDoctrineTranslationLoader": "src/"
+        },
+        "classmap": [
+            "./Module.php"
+        ]
+    }
+}
