@@ -18,12 +18,35 @@ class Doctrine implements RemoteLoaderInterface
      */
     protected $entityManager;
 
+    protected $entityClassMap = array(
+        'locale'=>'BsbDoctrineTranslationLoader\Entity\Locale',
+        'message'=>'BsbDoctrineTranslationLoader\Entity\Message'
+    );
+
     /**
      * @param EntityManager $entityManager
      */
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @param array $entityClassMap
+     */
+    public function setEntityClassMap($entityClassMap)
+    {
+        if (!is_array($entityClassMap)) {
+            return;
+        }
+
+        if (isset($entityClassMap['locale']) && is_string($entityClassMap['locale'])) {
+            $this->entityClassMap['locale'] = $entityClassMap['locale'];
+        }
+
+        if (isset($entityClassMap['message']) && is_string($entityClassMap['message'])) {
+            $this->entityClassMap['message'] = $entityClassMap['message'];
+        }
     }
 
     /**
@@ -37,7 +60,7 @@ class Doctrine implements RemoteLoaderInterface
         $textDomain         = new TextDomain();
         $queryBuilder       = $this->entityManager->createQueryBuilder();
         $query              = $queryBuilder->select('locale.id, locale.plural_forms')
-                                           ->from('BsbDoctrineTranslationLoader\Entity\Locale', 'locale')
+                                           ->from($this->entityClassMap['locale'], 'locale')
                                            ->where('locale.locale = :locale')
                                            ->setParameters(array(':locale' => $locale))
                                            ->getQuery();
@@ -68,7 +91,7 @@ class Doctrine implements RemoteLoaderInterface
 
         $query              = $queryBuilder
                                            ->select('DISTINCT message.id, message.message, message.translation, message.plural_index')
-                                           ->from('BsbDoctrineTranslationLoader\Entity\Message', 'message')
+                                           ->from($this->entityClassMap['message'], 'message')
                                            ->where('message.domain = :domain')
                                            ->andWhere('l.id = :locale_id')
                                            ->join('message.locale', 'l')
