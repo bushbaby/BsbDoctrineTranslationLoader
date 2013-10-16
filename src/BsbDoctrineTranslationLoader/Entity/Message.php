@@ -25,35 +25,35 @@ class Message
      *
      * @var Locale
      */
-    private $locale;
+    protected $locale;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=false)
      *
      * @var string $domain
      */
-    private $domain;
+    protected $domain;
 
     /**
      * @ORM\Column(name="message", type="text",  nullable=false)
      *
      * @var string message
      */
-    private $message;
+    protected $message;
 
     /**
      * @ORM\Column(type="text",  nullable=true)
      *
      * @var string $translation
      */
-    private $translation;
+    protected $translation;
 
     /**
      * @ORM\Column(type="smallint", length=3, nullable=true)
      *
      * @var string $plural_index
      */
-    private $plural_index;
+    protected $plural_index;
 
     /**
      * @param string $domain
