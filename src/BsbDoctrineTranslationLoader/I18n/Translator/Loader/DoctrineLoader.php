@@ -28,7 +28,7 @@ class DoctrineLoader implements RemoteLoaderInterface
     /**
      * @param string $locale
      * @param string $domain
-     * @return null|TextDomain
+     * @return TextDomain
      * @throws \BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException
      */
     public function load($locale, $domain)

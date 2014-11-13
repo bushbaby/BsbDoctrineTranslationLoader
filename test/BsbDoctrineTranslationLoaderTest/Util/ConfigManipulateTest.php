@@ -1,8 +1,8 @@
 <?php
 
-namespace BsbDoctrineTranslationLoaderTest\I18n\Translator\Loader;
+namespace BsbDoctrineTranslationLoaderTest\Util;
 
-use BsbDoctrineTranslationLoader\I18n\Translator\Loader\Doctrine;
+use BsbDoctrineTranslationLoader\Util\ConfigManipulate;
 use BsbDoctrineTranslationLoaderTest\Framework\TestCase;
 
 class ConfigManipulateTest extends TestCase
@@ -39,5 +39,36 @@ class ConfigManipulateTest extends TestCase
         $actual = $method->invokeArgs(null, array($input, '__x__', '__y__'));
 
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testOnMergeConfig()
+    {
+        $inputConfig    = array(
+            'bsb_doctrine_translation_loader' => array(
+                'entity_manager' => 'orm_default',
+                'doctrine'       => array(
+                    ConfigManipulate::EM_REPLACE_TOKEN => 'bar'
+                ),
+            ),
+            'doctrine'                        => array()
+        );
+        $outputConfig   = array(
+            'bsb_doctrine_translation_loader' => array(
+                'entity_manager' => 'orm_default',
+            ),
+            'doctrine'                        => array(
+                'orm_default' => 'bar',
+            )
+        );
+
+        $event          = new \Zend\ModuleManager\ModuleEvent();
+        $configListener = $this->getMock('Zend\ModuleManager\Listener\ConfigMergerInterface');
+
+        $event->setConfigListener($configListener);
+
+        $configListener->expects($this->once())->method('getMergedConfig')->with(false)->willReturn($inputConfig);
+        $configListener->expects($this->once())->method('setMergedConfig')->with($outputConfig);
+
+        ConfigManipulate::onMergeConfig($event);
     }
 }

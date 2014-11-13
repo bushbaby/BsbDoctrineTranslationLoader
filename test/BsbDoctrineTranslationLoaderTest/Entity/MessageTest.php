@@ -2,7 +2,6 @@
 
 namespace BsbDoctrineTranslationLoaderTest\I18n\Translator\Loader;
 
-use BsbDoctrineTranslationLoader\Entity\Locale;
 use BsbDoctrineTranslationLoader\Entity\Message;
 use BsbDoctrineTranslationLoaderTest\Framework\TestCase;
 
@@ -62,5 +61,4 @@ class MessageTest extends TestCase
         $message->setTranslation($expected);
         $this->assertEquals($expected, $message->getTranslation());
     }
-
 }

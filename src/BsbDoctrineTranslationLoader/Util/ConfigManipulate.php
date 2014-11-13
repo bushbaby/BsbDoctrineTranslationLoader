@@ -7,7 +7,9 @@ use Zend\Stdlib\ArrayUtils;
 
 class ConfigManipulate
 {
-
+    /**
+     * Token used as key in configuration 'template' to replace EntityManager 'name'
+     */
     const EM_REPLACE_TOKEN = '__em_token__';
 
     public static function onMergeConfig(ModuleEvent $e)

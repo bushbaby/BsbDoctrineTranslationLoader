@@ -6,11 +6,7 @@ use BsbDoctrineTranslationLoader\Entity\Locale;
 use BsbDoctrineTranslationLoader\Entity\Message;
 use BsbDoctrineTranslationLoader\I18n\Translator\Loader\DoctrineLoader;
 use BsbDoctrineTranslationLoaderTest\Framework\TestCase;
-use BsbDoctrineTranslationLoaderTest\Util\ServiceManagerFactory;
-use BsbDoctrineTranslationLoader\I18n\Translator\Loader\Doctrine;
-use Doctrine\ORM\Tools\SchemaTool;
 use Zend\I18n\Translator\TextDomain;
-use Zend\ServiceManager\ServiceManager;
 
 class DoctrineLoaderFunctionalTest extends TestCase
 {
@@ -36,7 +32,8 @@ class DoctrineLoaderFunctionalTest extends TestCase
         unset($this->doctrineLoader);
     }
 
-    protected function addLocale($locale, $pluralForm = 'nplurals=2; plural=n != 1;') {
+    protected function addLocale($locale, $pluralForm = 'nplurals=2; plural=n != 1;')
+    {
         $entity = new Locale();
         $entity->setLocale($locale);
         $entity->setPluralForms($pluralForm);
@@ -46,9 +43,12 @@ class DoctrineLoaderFunctionalTest extends TestCase
         return $entity;
     }
 
-    protected function addMessage($locale, $message, $translation, $pluralIndex = null, $domain = 'default') {
+    protected function addMessage($locale, $message, $translation, $pluralIndex = null, $domain = 'default')
+    {
         if (is_string($locale)) {
-            $localeEntity = $this->getEntityManager()->getRepository('BsbDoctrineTranslationLoader\Entity\Locale')->findOneBy(array('locale'=>$locale));
+            $localeEntity = $this->getEntityManager()
+                ->getRepository('BsbDoctrineTranslationLoader\Entity\Locale')
+                ->findOneBy(array('locale'=>$locale));
         } else {
             $localeEntity = $locale;
         }
@@ -66,7 +66,7 @@ class DoctrineLoaderFunctionalTest extends TestCase
         return $message;
     }
 
-    public function test_SingularLoad()
+    public function testSingularLoad()
     {
         $locale = $this->addLocale('nl_NL');
         $this->addMessage($locale, 'key', 'sleutel');
@@ -83,7 +83,7 @@ class DoctrineLoaderFunctionalTest extends TestCase
         $this->assertEquals($textDomain['key'], 'key');
     }
 
-    public function test_PluralLoad()
+    public function testPluralLoad()
     {
         $locale = $this->addLocale('nl_NL');
         $this->addMessage($locale, '%s key', '%s sleutels', 0);
@@ -110,30 +110,34 @@ class DoctrineLoaderFunctionalTest extends TestCase
         $this->assertEquals($textDomain['%s key'][1], '%s key');
     }
 
-    public function test_incorrectPluralRuleThrowsException()
+    public function testIncorrectPluralRuleThrowsException()
     {
         $locale = $this->addLocale('nl_NL', 'incorrect plural rule');
 
-        $this->setExpectedException('BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException',
-            'Incorrect plural rule detected for locale');
+        $this->setExpectedException(
+            'BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException',
+            'Incorrect plural rule detected for locale'
+        );
 
         /** @var TextDomain $textDomain */
         $textDomain = $this->doctrineLoader->load('nl_NL', 'default');
     }
 
-    public function test_duplicateLocaleThrowsException()
+    public function testDuplicateLocaleThrowsException()
     {
         $locale = $this->addLocale('nl_NL');
         $locale = $this->addLocale('nl_NL');
 
-        $this->setExpectedException('BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException',
-            'Duplicate locale entry detected');
+        $this->setExpectedException(
+            'BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException',
+            'Duplicate locale entry detected'
+        );
 
         /** @var TextDomain $textDomain */
         $textDomain = $this->doctrineLoader->load('nl_NL', 'default');
     }
 
-    public function test_unknownLocaleReturnsEmptyTextDomain()
+    public function testUnknownLocaleReturnsEmptyTextDomain()
     {
         /** @var TextDomain $textDomain */
         $textDomain = $this->doctrineLoader->load('nl_NL', 'default');
@@ -142,7 +146,7 @@ class DoctrineLoaderFunctionalTest extends TestCase
         $this->assertCount(0, $textDomain);
     }
 
-    public function test_unknownDomainReturnsEmptyTextDomain()
+    public function testUnknownDomainReturnsEmptyTextDomain()
     {
         $locale = $this->addLocale('nl_NL');
         $this->addMessage($locale, 'key', 'sleutel');
@@ -155,53 +159,61 @@ class DoctrineLoaderFunctionalTest extends TestCase
         $this->assertCount(0, $textDomain);
     }
 
-    public function test_duplicateSingularMessageThrowsException()
+    public function testDuplicateSingularMessageThrowsException()
     {
         $locale = $this->addLocale('nl_NL');
         $this->addMessage($locale, 'key', 'sleutel');
         $this->addMessage($locale, 'key', 'sleutel');
 
-        $this->setExpectedException('BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException',
-            'Singular entries must be have unique keys from both singular and plural forms');
+        $this->setExpectedException(
+            'BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException',
+            'Singular entries must be have unique keys from both singular and plural forms'
+        );
 
         /** @var TextDomain $textDomain */
         $textDomain = $this->doctrineLoader->load('nl_NL', 'default');
     }
 
-    public function test_identicalSingularAndPluralMessageThrowsException()
+    public function testIdenticalSingularAndPluralMessageThrowsException()
     {
         $locale = $this->addLocale('nl_NL');
         $this->addMessage($locale, 'key', 'sleutel');
         $this->addMessage($locale, 'key', 'sleutel', 1);
 
-        $this->setExpectedException('BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException',
-            'Plural entries must be have unique keys from singular forms');
+        $this->setExpectedException(
+            'BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException',
+            'Plural entries must be have unique keys from singular forms'
+        );
 
         /** @var TextDomain $textDomain */
         $textDomain = $this->doctrineLoader->load('nl_NL', 'default');
     }
 
-    public function test_IdenticalPluralAndSingularMessageThrowsException()
+    public function testIdenticalPluralAndSingularMessageThrowsException()
     {
         $locale = $this->addLocale('nl_NL');
         $this->addMessage($locale, 'key', 'sleutel', 1);
         $this->addMessage($locale, 'key', 'sleutel');
 
-        $this->setExpectedException('BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException',
-            'Singular entries must be have unique keys from both singular and plural forms');
+        $this->setExpectedException(
+            'BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException',
+            'Singular entries must be have unique keys from both singular and plural forms'
+        );
 
         /** @var TextDomain $textDomain */
         $textDomain = $this->doctrineLoader->load('nl_NL', 'default');
     }
 
-    public function test_duplicatePluralIndexThrowsException()
+    public function testDuplicatePluralIndexThrowsException()
     {
         $locale = $this->addLocale('nl_NL');
         $this->addMessage($locale, '%s key', 'sleutels', 1);
         $this->addMessage($locale, '%s key', 'sleutel', 1);
 
-        $this->setExpectedException('BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException',
-            'Duplicate plural entry detected');
+        $this->setExpectedException(
+            'BsbDoctrineTranslationLoader\I18n\Exception\InvalidArgumentException',
+            'Duplicate plural entry detected'
+        );
 
         /** @var TextDomain $textDomain */
         $textDomain = $this->doctrineLoader->load('nl_NL', 'default');

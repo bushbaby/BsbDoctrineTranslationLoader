@@ -3,7 +3,7 @@
 namespace BsbDoctrineTranslationLoader\Service;
 
 use Zend\I18n\Translator\LoaderPluginManager;
-use Zend\Mvc\I18n\Translator;
+use Zend\I18n\Translator\Translator;
 use Zend\ServiceManager\Config;
 use Zend\ServiceManager\DelegatorFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -13,7 +13,7 @@ class MvcTranslatorDelegatorFactory implements DelegatorFactoryInterface
     protected $translator_config = array(
         'factories' => array(
             'BsbDoctrineTranslationLoader'
-            => 'BsbDoctrineTranslationLoader\I18n\Translator\Loader\Factory\DoctrineLoaderFactory',
+                => 'BsbDoctrineTranslationLoader\I18n\Translator\Loader\Factory\DoctrineLoaderFactory',
         ),
     );
 
