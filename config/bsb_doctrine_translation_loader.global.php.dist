@@ -1,6 +1,9 @@
 <?php
 
 return array(
+    'bsb_doctrine_translation_loader' => array(
+        'entity_manager' => 'orm_default',
+    ),
     'translator' => array(
         'remote_translation' => array(
             /* add a remote translation loader for each text domain */

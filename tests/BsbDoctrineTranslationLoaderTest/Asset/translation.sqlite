@@ -1,7 +1,0 @@
-
-CREATE TABLE "translation_locale" (
-  "id" integer NOT NULL ,
-  "locale" varchar(5) NOT NULL,
-  "plural_forms" varchar(256) DEFAULT NULL,
-  PRIMARY KEY ("id")
-);

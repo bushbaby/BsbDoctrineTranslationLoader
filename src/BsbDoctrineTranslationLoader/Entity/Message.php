@@ -2,55 +2,34 @@
 
 namespace BsbDoctrineTranslationLoader\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="translation_message")
- */
 class Message
 {
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer");
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
      * @var integer $id
      */
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="BsbDoctrineTranslationLoader\Entity\Locale", inversedBy="messages")
-     * @ORM\JoinColumn(name="locale_id", referencedColumnName="id", onDelete="CASCADE")
-     *
      * @var Locale
      */
     protected $locale;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=false)
-     *
      * @var string $domain
      */
     protected $domain;
 
     /**
-     * @ORM\Column(name="message", type="text",  nullable=false)
-     *
      * @var string message
      */
     protected $message;
 
     /**
-     * @ORM\Column(type="text",  nullable=true)
-     *
      * @var string $translation
      */
     protected $translation;
 
     /**
-     * @ORM\Column(type="smallint", length=3, nullable=true)
-     *
      * @var string $plural_index
      */
     protected $plural_index;
@@ -150,5 +129,4 @@ class Message
     {
         return $this->translation;
     }
-
 }

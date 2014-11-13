@@ -3,37 +3,39 @@ BsbDoctrineTranslationLoader
 
 BsbDoctrineTranslationLoader is a small ZF2 module that provides a Doctrine based translation loader.
 
+[![Latest Stable Version](https://poser.pugx.org/bushbaby/bsb-doctrine-translation-loader/v/stable.svg)](https://packagist.org/packages/bushbaby/bsb-doctrine-translation-loader) [![Total Downloads](https://poser.pugx.org/bushbaby/bsb-doctrine-translation-loader/downloads.svg)](https://packagist.org/packages/bushbaby/bsb-doctrine-translation-loader) [![Latest Unstable Version](https://poser.pugx.org/bushbaby/bsb-doctrine-translation-loader/v/unstable.svg)](https://packagist.org/packages/bushbaby/bsb-doctrine-translation-loader) [![License](https://poser.pugx.org/bushbaby/bsb-doctrine-translation-loader/license.svg)](https://packagist.org/packages/bushbaby/bsb-doctrine-translation-loader)
+
+[![Build Status](https://travis-ci.org/bushbaby/BsbDoctrineTranslationLoader.svg?branch=master)](https://travis-ci.org/bushbaby/BsbDoctrineTranslationLoader)
+[![Code Coverage](https://scrutinizer-ci.com/g/bushbaby/BsbDoctrineTranslationLoader/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/bushbaby/BsbDoctrineTranslationLoader/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bushbaby/BsbDoctrineTranslationLoader/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/bushbaby/BsbDoctrineTranslationLoader/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/bushbaby/BsbDoctrineTranslationLoader/badges/build.png?b=master)](https://scrutinizer-ci.com/g/bushbaby/BsbDoctrineTranslationLoader/build-status/master)
+[![Dependency Status](https://www.versioneye.com/user/projects/5464c8ef4de5ef380a000004/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5464c8ef4de5ef380a000004)
+
 ## Installation
 
-### as zf2 project
+```sh
+php composer.phar require "bushbaby/bsb-doctrine-translation-loader:~1.0"
+```
 
-BsbDoctrineTranslationLoader works with Composer. To install it into your project, just add the following line into your composer.json file:
+Then add `BsbDoctrineTranslationLoader` to the `config/application.config.php` modules list.
 
-    "require": {
-        "bushbaby/bsb-doctrine-translation-loader": "*"
-    }
-   
-Then update your project by runnning composer.phar update. 
+Copy the `config/bsb_doctrine_translation_loader.global.php.dist` to the `config/autoload` directory to jump start configuration. 
 
-Finally enable the module by adding BsbDoctrineTranslationLoader in your application.config.php file. 
+Create the required database tables by importing running;
 
-### as standalone
+mysql database < etc/mysql.sql
 
-For development purposes you might want to install BsbDoctrineTranslationLoader standalone. Clone the project somewhere on your computer
+## Requirements
 
-    git clone git@github.com:bushbaby/BsbDoctrineTranslationLoader.git BsbDoctrineTranslationLoader
-    cd BsbDoctrineTranslationLoader
-    curl -sS https://getcomposer.org/installer | php
-    git checkout develop
-    ./composer.phar install
-    phpunit
-    
+- \>=PHP5.3
+- \>=ZF2.2.2
+
 
 ## Configuration
 
-To configure the module just copy the bsb_doctrine_translation_loader.local.php.dist (you can find this file in the config folder of BsbDoctrineTranslationLoader) into your config/autoload folder, and override what you want.
+To configure the module just copy the bsb_doctrine_translation_loader.global.php.dist (you can find this file in the config folder of BsbDoctrineTranslationLoader) into your config/autoload folder, and override what you want.
 
-To enable the loader for a particular text domain add a remote
+To enable the loader for a particular text domain add a remote.
 
 ```
 return array(
@@ -46,4 +48,17 @@ return array(
     ),
 );
 ```
+
+### Change the connection
+ 
+By default BsbDoctrineTranslationLoader will use the orm_default connection which is configured by DoctrineORMModule. If you need to change the connection, change the 'entity_manager' key;
+
+```
+return array(
+    'bsb_doctrine_translation_loader' => array(
+        'entity_manager' => 'em_identifier',
+    ),
+);
+```
+Note: that is up to you to [configure](https://github.com/doctrine/DoctrineORMModule/blob/master/docs/configuration.md#how-to-use-two-connections) the DoctrineORMModule such that 'em_identifier' exists as a valid connection.
 
