@@ -43,7 +43,7 @@ class Bootstrap
 
     public static function getApplicationConfig()
     {
-        $config = [];
+        $config = array();
         if (!$config = @include __DIR__ . '/TestConfiguration.php') {
             $config = require __DIR__ . '/TestConfiguration.php.dist';
         }
