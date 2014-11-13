@@ -1,0 +1,39 @@
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+CREATE TABLE IF NOT EXISTS `translation_locale` (
+  `id` int(11) NOT NULL,
+  `locale` varchar(5) NOT NULL,
+  `plural_forms` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `translation_message` (
+  `id` int(11) NOT NULL,
+  `locale_id` int(11) DEFAULT NULL,
+  `domain` varchar(255) binary NOT NULL,
+  `message` longtext NOT NULL,
+  `translation` longtext,
+  `plural_index` smallint(6) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+ALTER TABLE `translation_locale`
+ ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `translation_message`
+ ADD PRIMARY KEY (`id`), ADD KEY `IDX_17B1C98DE559DFD1` (`locale_id`);
+
+
+ALTER TABLE `translation_locale`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+ALTER TABLE `translation_message`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=34045;
+
+ALTER TABLE `translation_message`
+ADD CONSTRAINT `FK_17B1C98DE559DFD1` FOREIGN KEY (`locale_id`) REFERENCES `translation_locale` (`id`) ON DELETE CASCADE;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

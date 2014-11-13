@@ -2,33 +2,19 @@
 
 namespace BsbDoctrineTranslationLoader\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity
- * @ORM\Table(name="translation_locale")
- */
 class Locale
 {
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer");
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
      * @var integer $id
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=5, nullable=false)
-     *
      * @var string $locale
      */
     protected $locale;
 
     /**
-     * @ORM\Column(type="string")
-     *
      * var string $plural_forms
      */
     protected $plural_forms;

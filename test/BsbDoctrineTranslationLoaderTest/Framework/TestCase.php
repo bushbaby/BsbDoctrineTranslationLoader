@@ -19,11 +19,10 @@
 
 namespace BsbDoctrineTranslationLoaderTest\Framework;
 
+use BsbDoctrineTranslationLoaderTest\Bootstrap;
+use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit_Framework_TestCase;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\ToolsException;
-use BsbDoctrineTranslationLoaderTest\Util\ServiceManagerFactory;
-use Zend\ServiceManager\ServiceManager;
 
 class TestCase extends PHPUnit_Framework_TestCase
 {
@@ -46,22 +45,31 @@ class TestCase extends PHPUnit_Framework_TestCase
             return;
         }
 
-        $em = $this->getEntityManager();
-        $conn = $em->getConnection();
+        $em        = $this->getEntityManager();
+        $conn      = $em->getConnection();
+        $meta      = $em->getMetadataFactory()->getAllMetadata();
+        $tool      = new SchemaTool($em);
+        $createSql = $tool->getCreateSchemaSql($meta);
 
-        $conn->executeQuery(file_get_contents(__DIR__ . '/../Asset/locale.sqlite'));
-        $conn->executeQuery(file_get_contents(__DIR__ . '/../Asset/translation.sqlite'));
+        foreach($createSql as $sql) {
+            $conn->executeQuery($sql);
+        }
 
         $this->hasDb = true;
     }
 
     public function dropDb()
     {
-        $em = $this->getEntityManager();
+        $em   = $this->getEntityManager();
         $conn = $em->getConnection();
 
-        $conn->executeQuery('DROP TABLE translation_locale');
-        $conn->executeQuery('DROP TABLE translation_message');
+        $conn->executeQuery("PRAGMA `writable_schema` = 1");
+        $conn->executeQuery("DELETE FROM `sqlite_master` WHERE `type` IN ('table', 'index', 'trigger')");
+        $conn->executeQuery("PRAGMA `writable_schema` = 0");
+        $conn->executeQuery("VACUUM");
+        $conn->executeQuery("PRAGMA INTEGRITY_CHECK");
+
+        $em->clear();
 
         $this->hasDb = false;
     }
@@ -77,7 +85,7 @@ class TestCase extends PHPUnit_Framework_TestCase
             return $this->entityManager;
         }
 
-        $serviceManager = ServiceManagerFactory::getServiceManager();
+        $serviceManager      = Bootstrap::getServiceManager();
         $this->entityManager = $serviceManager->get('doctrine.entitymanager.orm_default');
 
         return $this->entityManager;

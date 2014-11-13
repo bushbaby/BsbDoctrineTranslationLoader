@@ -4,27 +4,29 @@ namespace BsbDoctrineTranslationLoaderTest\I18n\Translator\Loader;
 
 use BsbDoctrineTranslationLoader\Entity\Locale;
 use BsbDoctrineTranslationLoader\Entity\Message;
+use BsbDoctrineTranslationLoader\I18n\Translator\Loader\DoctrineLoader;
 use BsbDoctrineTranslationLoaderTest\Framework\TestCase;
 use BsbDoctrineTranslationLoaderTest\Util\ServiceManagerFactory;
 use BsbDoctrineTranslationLoader\I18n\Translator\Loader\Doctrine;
+use Doctrine\ORM\Tools\SchemaTool;
 use Zend\I18n\Translator\TextDomain;
 use Zend\ServiceManager\ServiceManager;
 
-class DoctrineTest extends TestCase
+class DoctrineLoaderFunctionalTest extends TestCase
 {
 
     /**
-     * @var Doctrine $doctrineLoader
+     * @var DoctrineLoader $doctrineLoader
      */
     protected $doctrineLoader;
 
     public function setUp()
     {
         parent::setUp();
-        
+
         $this->createDb();
 
-        $this->doctrineLoader = new Doctrine($this->getEntityManager());
+        $this->doctrineLoader = new DoctrineLoader($this->getEntityManager());
     }
 
     public function tearDown()
@@ -79,7 +81,6 @@ class DoctrineTest extends TestCase
         $textDomain = $this->doctrineLoader->load('en_GB', 'default');
         $this->assertArrayHasKey('key', $textDomain);
         $this->assertEquals($textDomain['key'], 'key');
-
     }
 
     public function test_PluralLoad()
@@ -165,7 +166,6 @@ class DoctrineTest extends TestCase
 
         /** @var TextDomain $textDomain */
         $textDomain = $this->doctrineLoader->load('nl_NL', 'default');
-        var_dump($textDomain->getArrayCopy());
     }
 
     public function test_identicalSingularAndPluralMessageThrowsException()

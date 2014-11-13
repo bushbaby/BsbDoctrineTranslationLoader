@@ -6,12 +6,11 @@ use BsbDoctrineTranslationLoader\I18n\Exception;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Query\Expr\Join;
 use Zend\I18n\Translator\Loader\RemoteLoaderInterface;
 use Zend\I18n\Translator\Plural\Rule as PluralRule;
 use Zend\I18n\Translator\TextDomain;
 
-class Doctrine implements RemoteLoaderInterface
+class DoctrineLoader implements RemoteLoaderInterface
 {
     /**
      * @var EntityManager $entityManager
@@ -34,16 +33,16 @@ class Doctrine implements RemoteLoaderInterface
      */
     public function load($locale, $domain)
     {
-        $textDomain         = new TextDomain();
-        $queryBuilder       = $this->entityManager->createQueryBuilder();
-        $query              = $queryBuilder->select('locale.id, locale.plural_forms')
-                                           ->from('BsbDoctrineTranslationLoader\Entity\Locale', 'locale')
-                                           ->where('locale.locale = :locale')
-                                           ->setParameters(array(':locale' => $locale))
-                                           ->getQuery();
+        $textDomain   = new TextDomain();
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $query        = $queryBuilder->select('locale.id, locale.plural_forms')
+                                     ->from('BsbDoctrineTranslationLoader:Locale', 'locale')
+                                     ->where('locale.locale = :locale')
+                                     ->setParameters(array(':locale' => $locale))
+                                     ->getQuery();
 
         try {
-            $localeInformation  = $query->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
+            $localeInformation = $query->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
         } catch (NonUniqueResultException $e) {
             throw new Exception\InvalidArgumentException(
                 sprintf("Duplicate locale entry detected ('%s').", $locale)
@@ -54,7 +53,7 @@ class Doctrine implements RemoteLoaderInterface
             return $textDomain;
         }
 
-        if(strlen($localeInformation['plural_forms'])) {
+        if (strlen($localeInformation['plural_forms'])) {
             try {
                 $textDomain->setPluralRule(
                     PluralRule::fromString($localeInformation['plural_forms'])
@@ -66,16 +65,18 @@ class Doctrine implements RemoteLoaderInterface
             }
         }
 
-        $query              = $queryBuilder
-                                           ->select('DISTINCT message.id, message.message, message.translation, message.plural_index')
-                                           ->from('BsbDoctrineTranslationLoader\Entity\Message', 'message')
-                                           ->where('message.domain = :domain')
-                                           ->andWhere('l.id = :locale_id')
-                                           ->join('message.locale', 'l')
-                                           ->getQuery();
+        $query = $queryBuilder
+            ->select('DISTINCT message.id, message.message, message.translation, message.plural_index')
+            ->from('BsbDoctrineTranslationLoader:Message', 'message')
+            ->where('message.domain = :domain')
+            ->andWhere('l.id = :locale_id')
+            ->join('message.locale', 'l')
+            ->getQuery();
 
-        $messages           = $query->execute(array(':locale_id' => $localeInformation['id'],
-                                          ':domain' => $domain), AbstractQuery::HYDRATE_OBJECT);
+        $messages = $query->execute(array(
+            ':locale_id' => $localeInformation['id'],
+            ':domain'    => $domain
+        ), AbstractQuery::HYDRATE_OBJECT);
 
         foreach ($messages as $message) {
             if (is_int($message['plural_index'])) {
@@ -97,7 +98,13 @@ class Doctrine implements RemoteLoaderInterface
             } else {
                 if (isset($textDomain[$message['message']])) {
                     throw new Exception\InvalidArgumentException(
-                        sprintf("Singular entries must be have unique keys from both singular and plural forms (locale '%s', '%s', '%s')", $locale, $domain, $message['message'])
+                        sprintf(
+                            "Singular entries must be have unique keys from both singular and plural forms " .
+                            "(locale '%s', '%s', '%s')",
+                            $locale,
+                            $domain,
+                            $message['message']
+                        )
                     );
                 }
 
