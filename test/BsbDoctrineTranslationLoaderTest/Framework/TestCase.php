@@ -34,7 +34,7 @@ class TestCase extends PHPUnit_Framework_TestCase
         $tool      = new SchemaTool($em);
         $createSql = $tool->getCreateSchemaSql($meta);
 
-        foreach($createSql as $sql) {
+        foreach ($createSql as $sql) {
             $conn->executeQuery($sql);
         }
 

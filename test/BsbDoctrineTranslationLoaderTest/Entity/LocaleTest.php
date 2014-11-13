@@ -3,8 +3,6 @@
 namespace BsbDoctrineTranslationLoaderTest\I18n\Translator\Loader;
 
 use BsbDoctrineTranslationLoader\Entity\Locale;
-use BsbDoctrineTranslationLoader\I18n\Translator\Loader\Doctrine;
-use BsbDoctrineTranslationLoader\I18n\Translator\Loader\DoctrineLoader;
 use BsbDoctrineTranslationLoaderTest\Framework\TestCase;
 
 class LocaleTest extends TestCase

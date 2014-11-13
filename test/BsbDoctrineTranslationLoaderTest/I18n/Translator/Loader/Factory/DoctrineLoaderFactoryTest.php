@@ -2,7 +2,6 @@
 
 namespace BsbDoctrineTranslationLoaderTest\I18n\Translator\Loader;
 
-use BsbDoctrineTranslationLoader\I18n\Translator\Loader\Doctrine;
 use BsbDoctrineTranslationLoader\I18n\Translator\Loader\Factory\DoctrineLoaderFactory;
 use BsbDoctrineTranslationLoaderTest\Framework\TestCase;
 

@@ -10,8 +10,6 @@ class DoctrineLoaderFactory implements FactoryInterface
 {
     /**
      * {@inheritdocs}
-     *
-     * @todo make EntityManager configurable
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
