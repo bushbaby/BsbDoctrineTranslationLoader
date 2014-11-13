@@ -14,7 +14,7 @@ class Module
             ->getEventManager()
             ->attach(
                 ModuleEvent::EVENT_MERGE_CONFIG,
-                ['BsbDoctrineTranslationLoader\Util\ConfigManipulate', 'onMergeConfig']
+                array('BsbDoctrineTranslationLoader\Util\ConfigManipulate', 'onMergeConfig')
             );
     }
 
@@ -25,12 +25,12 @@ class Module
 
     public function getAutoloaderConfig()
     {
-        return [
-            'Zend\Loader\StandardAutoloader' => [
-                'namespaces' => [
+        return array(
+            'Zend\Loader\StandardAutoloader' => array(
+                'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ],
-            ],
-        ];
+                ),
+            ),
+        );
     }
 }
